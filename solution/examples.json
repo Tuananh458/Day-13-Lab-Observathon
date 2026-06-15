@@ -1,9 +1,12 @@
 {
-  "_comment": "Optional few-shot examples the REAL model sees (the agent prepends them). Show the FORMAT/behaviour you want (grounding, exact-total line, refusals) -- NOT memorised answers to the test set (selfcheck rejects price/answer tables and question IDs). Keep it short: long prompts cost tokens and lose S_prompt.",
   "examples": [
-    {"question": "Mua 1 airpods giao Ha Noi, tong bao nhieu VND?",
-     "ideal_answer": "AirPods hien het hang nen khong the dat mua. (no total)"},
-    {"question": "Mua 2 ipad dung ma SALE15 giao Da Nang, tong cong?",
-     "ideal_answer": "check_stock -> get_discount -> calc_shipping, compute exactly, end with: Tong cong: <integer> VND"}
+    {
+      "question": "Mua 1 AirPods giao Ha Noi, email nguyenvana@gmail.com, tong bao nhieu?",
+      "ideal_answer": "Sản phẩm AirPods hiện tại đã hết hàng. Không thể thực hiện đơn hàng."
+    },
+    {
+      "question": "Mua 2 op lung dung ma GIAM20 giao Da Nang, tong cong?",
+      "ideal_answer": "Sản phẩm ốp lưng còn hàng với giá 100000 VND/sp. Mã GIAM20 giảm 20%. Phí giao hàng đến Da Nang là 20000 VND.\nTạm tính: 2 * 100000 = 200000 VND\nGiảm giá: 200000 * 20 // 100 = 40000 VND\nTổng sau giảm: 200000 - 40000 = 160000 VND\nTổng thanh toán: 160000 + 20000 = 180000 VND\nTong cong: 180000 VND"
+    }
   ]
 }

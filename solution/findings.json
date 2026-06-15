@@ -1,12 +1,46 @@
 {
-  "team": "TODO-team-name",
+  "team": "Tuananh458",
   "schema_version": 1,
   "findings": [
     {
+      "fault_class": "pii_leak",
+      "evidence": {
+        "metric": "pii_leak_count",
+        "observed": "4 leaks in turn 0",
+        "trace_ids": ["req-39c442ac", "req-4a4482bc", "req-2fca3c2c", "req-3ab084f4"]
+      },
+      "root_cause": "Config has redact_pii=false and system prompt doesn't restrict output of customer email/phone",
+      "suggested_fix": "Set redact_pii=true in config.json and instruct agent in prompt.txt not to output email/phone"
+    },
+    {
+      "fault_class": "infinite_loop",
+      "evidence": {
+        "metric": "steps",
+        "observed": "12 steps with max_steps status",
+        "trace_ids": ["req-f2d3f9e3"]
+      },
+      "root_cause": "Config has loop_guard=false and agent lacks instruction to stop repeating tool calls",
+      "suggested_fix": "Set loop_guard=true and max_steps=6 in config.json, instruct agent to call each tool once in prompt.txt"
+    },
+    {
+      "fault_class": "tool_failure",
+      "evidence": {
+        "metric": "item_not_found_or_incorrect_stock",
+        "observed": "MacBook queries incorrectly reporting out of stock",
+        "trace_ids": ["req-6c7a76cc"]
+      },
+      "root_cause": "Config has catalog_override overriding macbook to out of stock",
+      "suggested_fix": "Clear catalog_override in config.json"
+    },
+    {
       "fault_class": "latency_spike",
-      "evidence": {"metric": "latency_p95_ms", "observed": "TODO from your telemetry", "trace_ids": []},
-      "root_cause": "TODO: what config knob or behavior causes it?",
-      "suggested_fix": "TODO: config change and/or wrapper mitigation"
+      "evidence": {
+        "metric": "latency_p95_ms",
+        "observed": "p95 latency over 20s on loop/redundant calls",
+        "trace_ids": ["req-f2d3f9e3", "req-f2d691dd"]
+      },
+      "root_cause": "No cache enabled, large context size, and verbose system logs",
+      "suggested_fix": "Enable cache, reduce context_size to 4, set verbose_system=false in config.json"
     }
   ]
 }
