@@ -1,0 +1,21 @@
+{
+  "team": "Tuananh458",
+  "phase": "public",
+  "headline": 93.91,
+  "sub": {
+    "correct": 0.7867,
+    "quality": 0.8682,
+    "error": 1.0,
+    "latency": 0.608,
+    "cost": 0.2642,
+    "drift": 0.0,
+    "prompt": 0.8402
+  },
+  "diag_f1": 1.0,
+  "n": 120,
+  "n_correct": 92,
+  "judge_mode": "offline",
+  "weights_hash": "e81a8ed58d93",
+  "key_hash": "9a800fa6968d",
+  "sig": "e77d00ce70b14de3ad025cb039c620f687db264f84ed40c2bead9977652d68ce"
+}

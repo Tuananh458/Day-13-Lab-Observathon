@@ -3,44 +3,104 @@
   "schema_version": 1,
   "findings": [
     {
-      "fault_class": "pii_leak",
+      "fault_class": "error_spike",
       "evidence": {
-        "metric": "pii_leak_count",
-        "observed": "4 leaks in turn 0",
-        "trace_ids": ["req-39c442ac", "req-4a4482bc", "req-2fca3c2c", "req-3ab084f4"]
+        "metric": "error_rate",
+        "observed": "High tool_error_rate causing tools to fail with error status",
+        "trace_ids": ["req-24cc6795", "req-c1a8e76a"]
       },
-      "root_cause": "Config has redact_pii=false and system prompt doesn't restrict output of customer email/phone",
-      "suggested_fix": "Set redact_pii=true in config.json and instruct agent in prompt.txt not to output email/phone"
-    },
-    {
-      "fault_class": "infinite_loop",
-      "evidence": {
-        "metric": "steps",
-        "observed": "12 steps with max_steps status",
-        "trace_ids": ["req-f2d3f9e3"]
-      },
-      "root_cause": "Config has loop_guard=false and agent lacks instruction to stop repeating tool calls",
-      "suggested_fix": "Set loop_guard=true and max_steps=6 in config.json, instruct agent to call each tool once in prompt.txt"
+      "root_cause": "High tool_error_rate in config makes tools fail frequently with status error.",
+      "suggested_fix": "Set a retry policy with backoff in config.json to gracefully handle transient tool failures."
     },
     {
       "fault_class": "tool_failure",
       "evidence": {
         "metric": "item_not_found_or_incorrect_stock",
-        "observed": "MacBook queries incorrectly reporting out of stock",
-        "trace_ids": ["req-6c7a76cc"]
+        "observed": "Catalog override contradicts stock for Macbook, and lack of diacritic normalization fails to serve cities",
+        "trace_ids": ["req-989c03e5", "req-0ac8a76d"]
       },
-      "root_cause": "Config has catalog_override overriding macbook to out of stock",
-      "suggested_fix": "Clear catalog_override in config.json"
+      "root_cause": "Catalog override is contradicting stock for Macbook, and lack of diacritic normalization fails to serve cities.",
+      "suggested_fix": "Clear catalog_override in config.json and enable normalize_unicode."
     },
     {
       "fault_class": "latency_spike",
       "evidence": {
         "metric": "latency_p95_ms",
-        "observed": "p95 latency over 20s on loop/redundant calls",
-        "trace_ids": ["req-f2d3f9e3", "req-f2d691dd"]
+        "observed": "P95 and P99 tail latency spikes without caching",
+        "trace_ids": ["req-7d5c753b", "req-22df855f"]
       },
-      "root_cause": "No cache enabled, large context size, and verbose system logs",
-      "suggested_fix": "Enable cache, reduce context_size to 4, set verbose_system=false in config.json"
+      "root_cause": "Tail latency spike at p95 and p99 due to model price tier overhead and disabled cache.",
+      "suggested_fix": "Enable cache in config.json and reduce context_size."
+    },
+    {
+      "fault_class": "infinite_loop",
+      "evidence": {
+        "metric": "steps",
+        "observed": "Repeated tool calls exceeding max_steps due to lack of loop guard",
+        "trace_ids": ["req-c1a8e76a"]
+      },
+      "root_cause": "Agent gets stuck in a repeated loop exceeding max_steps due to lack of loop guard.",
+      "suggested_fix": "Set loop_guard=true and max_steps=6 in config.json."
+    },
+    {
+      "fault_class": "cost_blowup",
+      "evidence": {
+        "metric": "cost_usd",
+        "observed": "High cost and token usage from premium model tier and large context size storing excessive prompt_tokens",
+        "trace_ids": ["req-d1dab58f"]
+      },
+      "root_cause": "High cost and token usage due to premium model tier and large context size storing excessive prompt_tokens.",
+      "suggested_fix": "Set context_size=4 and verbose_system=false in config.json."
+    },
+    {
+      "fault_class": "quality_drift",
+      "evidence": {
+        "metric": "quality_score",
+        "observed": "Quality drift over multiple turns due to high temperature causing inconsistent responses",
+        "trace_ids": ["req-276e64e7"]
+      },
+      "root_cause": "Quality drift over multiple turns due to high temperature causing inconsistent responses.",
+      "suggested_fix": "Reduce temperature to 0.2 in config.json."
+    },
+    {
+      "fault_class": "pii_leak",
+      "evidence": {
+        "metric": "pii_leak_count",
+        "observed": "Leaking customer email and phone because redact_pii is disabled",
+        "trace_ids": ["req-a5deaeb9"]
+      },
+      "root_cause": "PII leak of customer email and phone because redact_pii is disabled in config.",
+      "suggested_fix": "Set redact_pii=true in config.json and instruct agent in prompt.txt not to output email/phone."
+    },
+    {
+      "fault_class": "fabrication",
+      "evidence": {
+        "metric": "fabrication_count",
+        "observed": "Fabrication of prices instead of grounding and refusing out of stock items",
+        "trace_ids": ["req-989c03e5"]
+      },
+      "root_cause": "Fabrication and hallucination of prices instead of grounding and refusing out of stock items.",
+      "suggested_fix": "Instruct agent in prompt.txt to refuse order when item is out of stock."
+    },
+    {
+      "fault_class": "arithmetic_error",
+      "evidence": {
+        "metric": "math_error_count",
+        "observed": "Arithmetic errors in math calculations of discount and total calculation",
+        "trace_ids": ["req-c1a8e76a"]
+      },
+      "root_cause": "Arithmetic errors in math calculations of discount and total calculation.",
+      "suggested_fix": "Instruct agent in prompt.txt to perform exact step-by-step arithmetic."
+    },
+    {
+      "fault_class": "tool_overuse",
+      "evidence": {
+        "metric": "tool_calls_count",
+        "observed": "Calling redundant tool steps because tool_budget is not set or over",
+        "trace_ids": ["req-7ae8881a"]
+      },
+      "root_cause": "Tool overuse calling redundant tool steps because tool_budget is not set or over.",
+      "suggested_fix": "Configure tool_budget=4 in config.json and instruct agent to call each tool at most once."
     }
   ]
 }
