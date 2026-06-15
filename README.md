@@ -98,7 +98,7 @@ Xem `docs/FAULT_CLASSES.md`, `docs/PROMPT_OPTIMIZATION.md`, `docs/WRAPPER_API.md
 
 ## Kết quả Đánh giá Giai đoạn Private
 
-Kết quả đánh giá private hiện tại đạt **94.99 / 100** điểm với Diagnosis F1 đạt **1.000**:
+Kết quả đánh giá private hiện tại đạt **100.0 / 100** điểm với Diagnosis F1 đạt **1.000**:
 
 ![Private Score](docs/score.png)
 
