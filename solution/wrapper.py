@@ -4,10 +4,29 @@ live -- the agent is silent. Legal moves: retry / cache / route / guardrail / sa
 / fallback / session-reset / PROMPT ROUTING, plus your own logging/tracing/metrics.
 """
 from __future__ import annotations
+try:
+    import certifi
+    import os
+    os.environ["SSL_CERT_FILE"] = certifi.where()
+    os.environ["SSL_CERT_DIR"] = os.path.dirname(certifi.where())
+except Exception:
+    pass
 import re
 import time
 import unicodedata
-from dotenv import load_dotenv
+def load_dotenv():
+    import os
+    if os.path.exists(".env"):
+        with open(".env", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    if "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip("'\"")
+                        os.environ[k] = v
+
 
 # Canonicalize the machine-parsed total line to a bare integer.
 # The real model intermittently formats the number with thousand separators
