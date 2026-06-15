@@ -1,21 +1,21 @@
 {
   "team": "Tuananh458",
-  "phase": "public",
+  "phase": "private",
   "headline": 100.0,
   "sub": {
-    "correct": 0.9733,
-    "quality": 0.984,
+    "correct": 1.0,
+    "quality": 1.0,
     "error": 1.0,
-    "latency": 0.5722,
-    "cost": 0.7063,
-    "drift": 0.9763,
-    "prompt": 0.9632
+    "latency": 0.7023,
+    "cost": 0.7047,
+    "drift": 1.0,
+    "prompt": 0.9746
   },
   "diag_f1": 1.0,
-  "n": 120,
-  "n_correct": 115,
+  "n": 80,
+  "n_correct": 80,
   "judge_mode": "offline",
   "weights_hash": "e81a8ed58d93",
-  "key_hash": "9a800fa6968d",
-  "sig": "d6f53067f618902dd584bc10fafee3fdc1f835e2ea52ba29d1843fb728753ac7"
+  "key_hash": "7e3905b75db0",
+  "sig": "8822f6d43117d9508ce9fbf6106696ae074c5e659eb125ad8886b5700eda40db"
 }

@@ -95,3 +95,10 @@ injection trừ đi phần prompt quá dài).
 - **3h** private **sim** (bộ giữ kín + diễn đạt lại + đòn **injection**) · **3.5h** private **score** → push (lần cuối).
 
 Xem `docs/FAULT_CLASSES.md`, `docs/PROMPT_OPTIMIZATION.md`, `docs/WRAPPER_API.md`, `docs/SUBMIT.md`. Luật: `../RULES.md`.
+
+## Kết quả Đánh giá Giai đoạn Private
+
+Kết quả đánh giá private hiện tại đạt **94.99 / 100** điểm với Diagnosis F1 đạt **1.000**:
+
+![Private Score](docs/score.png)
+

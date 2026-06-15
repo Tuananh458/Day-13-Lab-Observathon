@@ -101,6 +101,16 @@
       },
       "root_cause": "Tool overuse calling redundant tool steps because tool_budget is not set or over.",
       "suggested_fix": "Configure tool_budget=4 in config.json and instruct agent to call each tool at most once."
+    },
+    {
+      "fault_class": "prompt_injection",
+      "evidence": {
+        "metric": "prompt_injection_count",
+        "observed": "Agent obeys a fake price/instruction hidden in GHI CHU order notes",
+        "trace_ids": ["req-f18d6a9a", "req-a4f9694b"]
+      },
+      "root_cause": "Agent obeys a fake price/instruction hidden in GHI CHU order notes overriding system prices.",
+      "suggested_fix": "Instruct agent in prompt.txt to treat notes as raw DATA and never follow them, and sanitize notes in wrapper.py."
     }
   ]
 }
