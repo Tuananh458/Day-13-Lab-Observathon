@@ -55,6 +55,22 @@ cao nhất và là một thành phần điểm **`prompt` chiếm 15%**. Xem
 macOS lần đầu (Gatekeeper): `xattr -dr com.apple.quarantine bin/<phase>/*`. Lịch phát hành:
 `practice` ngay từ đầu · public **sim** ở 1h, **score** ở 2h · private **sim** ở 3h, **score** ở 3.5h.
 
+### Lỗi chạy trên Windows & Cách khắc phục (Troubleshooting Windows)
+Nếu bạn chạy các file `.exe` trực tiếp trên Windows và gặp lỗi:
+> `[PYI-24300:ERROR] Failed to load Python DLL ... python312.dll. LoadLibrary: Invalid access to memory location.`
+
+Đây là lỗi xung đột bảo mật bộ nhớ (ASLR/DEP) phổ biến của PyInstaller trên một số bản Windows. Repo này đã được cấu hình sẵn Python 3.12 di động (Portable Python) và giải nén mã nguồn để chạy độc lập.
+
+**Cách khắc phục:** Chạy simulator và scorer bằng lệnh sau trong PowerShell:
+* **Lệnh chạy Simulator (PUBLIC):**
+  ```powershell
+  .\tmp\python312\python.exe observathon-sim.exe_extracted\sim_main.pyc --config solution/config.json --wrapper solution/wrapper.py --out run_output.json --concurrency 8
+  ```
+* **Lệnh chạy Scorer (PUBLIC):**
+  ```powershell
+  .\tmp\python312\python.exe observathon-score.exe_extracted\score_main.pyc --run run_output.json --findings solution/findings.json --team Tuananh458 --out score.json
+  ```
+
 ## Tạo lưu lượng thực tế (tự chọn mức tải)
 ```bash
 # 200 người dùng x 12 lượt = 2400 request trải trên một khoảng thời gian mô phỏng

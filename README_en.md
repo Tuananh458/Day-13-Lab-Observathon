@@ -53,6 +53,22 @@ order notes). **Rewrite `solution/prompt.txt`** — it's the highest-leverage fi
 Gatekeeper first run: `xattr -dr com.apple.quarantine bin/<phase>/*`. Release schedule:
 `practice` from the start · public **sim** @ 1h, **score** @ 2h · private **sim** @ 3h, **score** @ 3.5h.
 
+### Troubleshooting Windows Execution
+If you run the `.exe` files directly on Windows and encounter the following error:
+> `[PYI-24300:ERROR] Failed to load Python DLL ... python312.dll. LoadLibrary: Invalid access to memory location.`
+
+This is a common memory protection conflict (ASLR/DEP) of PyInstaller on certain Windows versions. This repository is pre-configured with a portable Python 3.12 environment and extracted bytecode to run cleanly.
+
+**Workaround:** Run the simulator and scorer via the portable Python environment in PowerShell:
+* **Run Simulator (PUBLIC):**
+  ```powershell
+  .\tmp\python312\python.exe observathon-sim.exe_extracted\sim_main.pyc --config solution/config.json --wrapper solution/wrapper.py --out run_output.json --concurrency 8
+  ```
+* **Run Scorer (PUBLIC):**
+  ```powershell
+  .\tmp\python312\python.exe observathon-score.exe_extracted\score_main.pyc --run run_output.json --findings solution/findings.json --team Tuananh458 --out score.json
+  ```
+
 ## Generate realistic traffic (choose your load)
 ```bash
 # 200 active users x 12 turns each = 2400 requests over a simulated time window
