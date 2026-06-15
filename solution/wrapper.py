@@ -37,6 +37,26 @@ def load_dotenv():
 _TOTAL_RE = re.compile(r"(Tong cong:\s*)([0-9][0-9.,]*)(\s*VND)", re.IGNORECASE)
 
 
+def _sanitize_notes(question):
+    if not question:
+        return question
+    pattern = r"(ghi\s*chú|ghi\s*chu|note|lưu\s*ý|luu\s*y)\b\s*[:\-]?\s*(.*)"
+    match = re.search(pattern, question, re.IGNORECASE)
+    if match:
+        marker = match.group(1)
+        note_content = match.group(2)
+        sanitized_note = re.sub(r"\d+", "", note_content)
+        sanitized_note = re.sub(
+            r"\b(vnd|usd|đ|đồng|dong|price|giá|gia|override|bỏ\s*qua|bo\s*qua|system|hệ\s*thống|he\s*thong|bằng|bang|set|mức|muc)\b",
+            "",
+            sanitized_note,
+            flags=re.IGNORECASE
+        )
+        prefix = question[:match.start()]
+        return f"{prefix}{marker}: {sanitized_note.strip()}"
+    return question
+
+
 def _canonicalize_total(answer):
     if not answer or "Tong cong" not in answer:
         return answer
@@ -64,6 +84,9 @@ def mitigate(call_next, question, config, context):
     # Set correlation ID for logging trace context
     cid = new_correlation_id()
     set_correlation_id(cid)
+
+    # Sanitize input: clean prompt injection notes
+    question = _sanitize_notes(question)
 
     # 1. Normalize Unicode if enabled
     if config.get("normalize_unicode", False):
